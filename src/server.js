@@ -3,7 +3,6 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { pinoHttp } from 'pino-http';
 import { env } from './utils/env.js';
-import { Contact } from './models/contacts.js';
 import { getAllContacts, getContactById } from './services/contacts.js';
 
 dotenv.config();
