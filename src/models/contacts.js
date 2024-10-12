@@ -24,10 +24,7 @@ const contactSchema = new mongoose.Schema(
       required: true,
     },
   },
-  {
-    timestamps: true,
-  },
+  { versionKey: false, timestamps: true },
 );
 
-export const Contact = mongoose.model("Contact", contactSchema);
-
+export const Contact = mongoose.model('Contact', contactSchema);
