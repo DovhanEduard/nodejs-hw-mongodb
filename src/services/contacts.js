@@ -24,7 +24,7 @@ export const getAllContacts = async ({
       contactsQuery.where('isFavourite').equals(filter.isFavourite);
     }
 
-    const [contactsCount, contacts] = await Promise.all([
+    const [contactsCount, data] = await Promise.all([
       Contact.find().merge(contactsQuery).countDocuments(),
       contactsQuery
         .skip(skip)
@@ -39,7 +39,7 @@ export const getAllContacts = async ({
       perPage,
     );
 
-    return { contacts, ...paginationData };
+    return { data, ...paginationData };
   } catch (error) {
     console.log(error.message);
   }
