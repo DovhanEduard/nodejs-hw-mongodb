@@ -39,6 +39,7 @@ export const getAllContacts = async ({
       perPage,
     );
 
+    // return { data: contacts, ...paginationData };
     return { data, ...paginationData };
   } catch (error) {
     console.log(error.message);
