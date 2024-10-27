@@ -14,29 +14,32 @@ import {
   contactSchemaPost,
   contactSchemaPatch,
 } from '../validation/contacts.js';
+import { authenticate } from '../middlewares/authenticate.js';
 
 const router = express.Router();
 const jsonParser = express.json();
 
-router.get('/contacts', ctrlWrapper(getAllContactsController));
+router.use(authenticate);
 
-router.get('/contacts/:id', isValidId, ctrlWrapper(getContactByIdController));
+router.get('/', ctrlWrapper(getAllContactsController));
+
+router.get('/:id', isValidId, ctrlWrapper(getContactByIdController));
 
 router.post(
-  '/contacts',
+  '/',
   jsonParser,
   validateBody(contactSchemaPost),
   ctrlWrapper(createContactController),
 );
 
 router.patch(
-  '/contacts/:id',
+  '/:id',
   isValidId,
   jsonParser,
   validateBody(contactSchemaPatch),
   ctrlWrapper(updateContactController),
 );
 
-router.delete('/contacts/:id', isValidId, ctrlWrapper(deleteContactController));
+router.delete('/:id', isValidId, ctrlWrapper(deleteContactController));
 
 export default router;
