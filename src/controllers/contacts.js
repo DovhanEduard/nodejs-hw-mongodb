@@ -10,6 +10,8 @@ import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { env } from '../utils/env.js';
 
 export async function getAllContactsController(req, res) {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -49,7 +51,7 @@ export async function getContactByIdController(req, res, next) {
   });
 }
 
-export async function createContactController(req, res) {
+export async function createContactController(req, res, next) {
   const photo = req.file;
 
   const contact = {
@@ -61,7 +63,21 @@ export async function createContactController(req, res) {
     userId: req.user.id,
   };
 
-  const result = await createContact(contact);
+  let photoUrl;
+
+  if (photo) {
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
+
+  const result = await createContact({ ...contact, photo: photoUrl });
+
+  if (result === null) {
+    return next(createHttpError(404, 'Contact not found'));
+  }
 
   res.status(201).json({
     status: 201,
@@ -86,7 +102,11 @@ export async function updateContactController(req, res, next) {
   let photoUrl;
 
   if (photo) {
-    photoUrl = await saveFileToUploadDir(photo);
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
   }
 
   const result = await updateContact(id, userId, {
@@ -95,7 +115,7 @@ export async function updateContactController(req, res, next) {
   });
 
   if (result === null) {
-    next(createHttpError(404, 'Contact not found'));
+    return next(createHttpError(404, 'Contact not found'));
   }
 
   res.status(200).json({
