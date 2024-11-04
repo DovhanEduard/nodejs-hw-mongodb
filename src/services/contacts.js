@@ -19,7 +19,6 @@ export const getAllContacts = async ({
     if (filter.contactType) {
       contactsQuery.where('contactType').equals(filter.contactType);
     }
-    console.log(filter.isFavourite);
 
     if (filter.isFavourite) {
       contactsQuery.where('isFavourite').equals(filter.isFavourite);
@@ -39,7 +38,7 @@ export const getAllContacts = async ({
       page,
       perPage,
     );
-
+    console.log(data);
     // return { data: contacts, ...paginationData };
     return { data, ...paginationData };
   } catch (error) {
@@ -62,6 +61,9 @@ export const createContact = async (contact) => {
 };
 
 export const updateContact = async (contactId, userId, contact) => {
+  console.log(contact);
+  console.log(userId);
+
   return Contact.findOneAndUpdate({ _id: contactId, userId: userId }, contact, {
     new: true,
   });
