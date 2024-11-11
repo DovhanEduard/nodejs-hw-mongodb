@@ -1,0 +1,39 @@
+type: object
+required:
+  - name
+  - phoneNumber
+  - contactType
+properties:
+  _id:
+    description: "Contact's id"
+    type: string
+    example: 6728d296023542183d93b08e
+  name:
+    description: "Contact's name"
+    type: string
+    example: 'James'
+  phoneNumber:
+    description: "Contact's phone number"
+    type: integer
+    example: 38099553344
+  contactType:
+    description: "Contact's type"
+    type: string
+    enum: ['work', 'home', 'personal']
+    example: 'personal'
+  email:
+    description: "Contact's email"
+    type: string
+    example: null
+  userId:
+    description: "User's id"
+    type: string
+    example: 65e4decdd286b30065d54af9
+  isFavourite:
+    description: "Contact's favourite"
+    type: boolean
+    example: false
+  photo:
+    description: "Contact's photo"
+    type: string
+    example: null
